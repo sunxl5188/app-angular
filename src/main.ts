@@ -8,9 +8,8 @@ import {hmrBootstrap} from './hmr';
 if (environment.production) {
   enableProdMode();
 }
-laydate.path = 'src/assets/js/laydate/theme/default/laydate.css';
+
 laydate.config.theme = '#39f';
-console.log(laydate);
 
 // platformBrowserDynamic().bootstrapModule(AppModule).catch(err => console.error(err));
 
