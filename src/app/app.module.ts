@@ -14,7 +14,7 @@ import { CityComponent } from './components/city/city.component';
 import { PaginationComponent } from './components/pagination/pagination.component';
 import { SearchComponent } from './components/search/search.component';
 import { WebUploaderComponent } from './components/web-uploader/web-uploader.component';
-
+import { ValidateDirective } from './shared/validate.directive';
 
 @NgModule({
   declarations: [
@@ -27,7 +27,8 @@ import { WebUploaderComponent } from './components/web-uploader/web-uploader.com
     CityComponent,
     PaginationComponent,
     SearchComponent,
-    WebUploaderComponent
+    WebUploaderComponent,
+    ValidateDirective
   ],
   imports: [
     BrowserModule,
