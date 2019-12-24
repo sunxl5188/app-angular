@@ -9,7 +9,7 @@ if (environment.production) {
   enableProdMode();
 }
 
-// laydate.config.theme = '#39f';
+laydate.config.theme = '#39f';
 
 
 // platformBrowserDynamic().bootstrapModule(AppModule).catch(err => console.error(err));
