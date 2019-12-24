@@ -25,6 +25,7 @@
     "bootstrap-select": "^1.13.12",
     "core-js": "^2.5.4",
     "jquery": "^3.4.1",
+    "layui-laydate": "^5.0.9",
     "layui-layer": "^1.0.9",
     "lodash": "^4.17.15",
     "rxjs": "~6.3.3",

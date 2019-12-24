@@ -9,5 +9,13 @@ export class HomeComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    laydate.render({
+      elem: '.times',
+      type: 'datetime',
+      done: (value) => {
+        console.log(value);
+      }
+    });
+  }
 }
