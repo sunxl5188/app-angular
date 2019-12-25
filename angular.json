@@ -39,6 +39,7 @@
               "node_modules/layui-layer/dist/layer.js",
               "node_modules/bootstrap-select/dist/js/bootstrap-select.min.js",
               "node_modules/bootstrap-select/dist/js/i18n/defaults-zh_CN.min.js",
+              "src/assets/webuploader/webuploader.js",
               "src/assets/js/laydate/laydate.js"
             ]
           },
