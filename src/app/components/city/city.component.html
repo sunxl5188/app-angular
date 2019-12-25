@@ -1,0 +1,30 @@
+<div class="form-inline" style="display:inline-block;">
+    <span class="mr-10">
+        <select class="form-control selectpicker" data-size="10" data-width="fit"
+                [(ngModel)]="model.province" (change)="findChild(1)" [required]="verification" #province="ngModel">
+            <option value="">请选择</option>
+            <option value="{{item.area_id}}" *ngFor="let item of provArr">{{item.title}}</option>
+        </select>
+    </span>
+    <span class="mr-10">
+        <select class="form-control selectpicker" data-size="10" data-width="fit"
+                [(ngModel)]="model.city" (change)="findChild(2)">
+            <option value="">请选择</option>
+            <option value="{{item.area_id}}" *ngFor="let item of cityArr">{{item.title}}</option>
+        </select>
+        </span>
+    <span class="mr-10">
+        <select class="form-control selectpicker" data-size="10" data-width="fit" [(ngModel)]="model.area"
+                (change)="handleCityCallBack()">
+            <option value="">请选择</option>
+            <option [value]="item.area_id" *ngFor="let item of areaArr" selected>{{item.title}}</option>
+        </select>
+        </span>
+    <span *ngIf="addressShow===true">
+        <input type="text" class="form-control" [(ngModel)]="model.address" (blur)="handleCityCallBack()"
+               placeholder="请输入详细地址" required>
+    </span>
+    <div *ngIf="(province.dirty || province.touched) && province.invalid" class="alert alert-danger">
+        <div *ngIf="province.errors.required">请选择省份</div>
+    </div>
+</div>
