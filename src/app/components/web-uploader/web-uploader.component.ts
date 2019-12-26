@@ -10,6 +10,7 @@ export class WebUploaderComponent implements OnInit {
   opts = {
     swf: './assets/webuploader/Uploader.swf',
     server: 'http://www.js.me/demo/data.php',
+    fileList: {id: '', type: ''}, // 上传显示的列表 id显示的div  type显示图片或文件
     dnd: undefined, // 指定Drag And Drop拖拽的容器
     disableGlobalDnd: false, // 是否禁掉整个页面的拖拽功能
     paste: undefined, // 粘贴来添加截屏的图片 指定监听paste事件的容器 建议设置为document.body
@@ -44,42 +45,49 @@ export class WebUploaderComponent implements OnInit {
     const upload = WebUploader.create(this.opts);
     // 当文件被加入队列之前触发
     upload.on('fileQueued', (file) => {
+      let $list;
       // 图片列表
-      const $li = $('<div id="' + file.id + '" class="image-item fid="">' +
-        '<img><div class="image-panel">' +
-        '<span class="data"></span>' +
-        '<a href="javascript:void(0);" class="cancel">删除</a>' +
-        '</div><div class="uploadIfy-progress">' +
-        '<div class="uploadIfy-progress-bar"></div></div></div>'
+      if (this.opts.fileList.type === 'image') {
+        $list = $('<div id="' + file.id + '" class="image-item fid="">' +
+          '<img><div class="image-panel">' +
+          '<span class="data"></span>' +
+          '<a href="javascript:void(0);" class="cancel">删除</a>' +
+          '</div><div class="uploadIfy-progress">' +
+          '<div class="uploadIfy-progress-bar"></div></div></div>'
         );
-      const $img = $li.find('img');
+        const $img = $list.find('img');
         // 创建缩略图
         // 如果为非图片文件，可以不用调用此方法。
         // thumbnailWidth x thumbnailHeight 为 100 x 100
-      const ratio = window.devicePixelRatio || 1;
-      const thumbnailWidth = 100 * ratio;
-      const thumbnailHeight = 100 * ratio;
+        const ratio = window.devicePixelRatio || 1;
+        const thumbnailWidth = 100 * ratio;
+        const thumbnailHeight = 100 * ratio;
 
-      upload.makeThumb(file, (error, src) => {
+        upload.makeThumb(file, (error, src) => {
           if (error) {
             $img.replaceWith('<span>不能预览</span>');
             return;
           }
           $img.attr('src', src);
         }, thumbnailWidth, thumbnailHeight);
-
+      }
       // 文件列表
-      // $li = $('<div class="uploadIfy-queue-item" id="' + file.id + '" fid=""><div class="cancel"><a href="javascript:void(0);">X</a></div><span class="fileName">' + file.name + ' (' + bytesToSize(file.size) + ')</span><span class="data"></span><div class="uploadIfy-progress"><div class="uploadIfy-progress-bar"></div></div></div>');
-
-
+      if (this.opts.fileList.type === 'file') {
+        $list = $('<div class="uploadIfy-queue-item" id="' + file.id + '" fid="">' +
+          '<div class="cancel"><a href="javascript:void(0);">X</a></div>' +
+          '<span class="fileName">' + file.name + ' (' + this.bytesToSize(file.size) + ')</span>' +
+          '<span class="data"></span><div class="uploadIfy-progress">' +
+          '<div class="uploadIfy-progress-bar"></div>' +
+          '</div></div>');
+      }
       // $list为容器jQuery实例
-      // $(opts.fileList.id).append($li);
+      $(this.opts.fileList.id).append($list);
 
       // 删除文件
-      $li.on('click', '.cancel', () => {
-        const fid = $li.attr('fid');
+      $list.on('click', '.cancel', () => {
+        const fid = $list.attr('fid');
         upload.removeFile(file);
-        $li.remove();
+        $list.remove();
         console.log(fid);
       });
     });
