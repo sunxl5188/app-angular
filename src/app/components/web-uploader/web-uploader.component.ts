@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-web-uploader',
@@ -7,10 +7,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class WebUploaderComponent implements OnInit {
 
+  @Input() fileList = '';
+
   opts = {
     swf: './assets/webuploader/Uploader.swf',
-    server: 'http://www.js.me/demo/data.php',
-    fileList: {id: '', type: ''}, // 上传显示的列表 id显示的div  type显示图片或文件
+    server: 'http://www.api.me/index/index/upload',
+    fileList: '', // 上传显示的列表 image,file显示图片或文件
     dnd: undefined, // 指定Drag And Drop拖拽的容器
     disableGlobalDnd: false, // 是否禁掉整个页面的拖拽功能
     paste: undefined, // 粘贴来添加截屏的图片 指定监听paste事件的容器 建议设置为document.body
@@ -42,12 +44,14 @@ export class WebUploaderComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    const upload = WebUploader.create(this.opts);
+    const self = this;
+    self.opts.fileList = self.fileList;
+    const upload = new WebUploader.create(this.opts);
     // 当文件被加入队列之前触发
     upload.on('fileQueued', (file) => {
       let $list;
       // 图片列表
-      if (this.opts.fileList.type === 'image') {
+      if (self.opts.fileList === 'image') {
         $list = $('<div id="' + file.id + '" class="image-item fid="">' +
           '<img><div class="image-panel">' +
           '<span class="data"></span>' +
@@ -72,37 +76,50 @@ export class WebUploaderComponent implements OnInit {
         }, thumbnailWidth, thumbnailHeight);
       }
       // 文件列表
-      if (this.opts.fileList.type === 'file') {
+      if (self.opts.fileList === 'file') {
         $list = $('<div class="uploadIfy-queue-item" id="' + file.id + '" fid="">' +
           '<div class="cancel"><a href="javascript:void(0);">X</a></div>' +
-          '<span class="fileName">' + file.name + ' (' + this.bytesToSize(file.size) + ')</span>' +
+          '<span class="fileName">' + file.name + ' (' + self.bytesToSize(file.size) + ')</span>' +
           '<span class="data"></span><div class="uploadIfy-progress">' +
           '<div class="uploadIfy-progress-bar"></div>' +
           '</div></div>');
       }
-      // $list为容器jQuery实例
-      $(this.opts.fileList.id).append($list);
+      if (self.opts.fileList) {
+        // $list为容器jQuery实例
+        $('.uploadList').append($list);
 
-      // 删除文件
-      $list.on('click', '.cancel', () => {
-        const fid = $list.attr('fid');
-        upload.removeFile(file);
-        $list.remove();
-        console.log(fid);
-      });
+        // 删除文件
+        $list.on('click', '.cancel', () => {
+          const fid = $list.attr('fid');
+          upload.removeFile(file);
+          $list.remove();
+          console.log(fid);
+        });
+      }
     });
     // 当文件上传成功时触发
-    upload.on('uploadSuccess', (file, response) => {});
+    upload.on('uploadSuccess', (file, response) => {
+      const $this = $('#' + file.id);
+      $this.find('.image-panel').show(); // 显示图片时
+      $this.find('.data').text('成功');
+      $this.attr('fid', response.data.id);
+    });
     // 不管成功或者失败，文件上传完成时触发
     upload.on('uploadComplete', () => {
       console.log('队列已执行完成');
     });
     // 上传过程中触发，携带上传进度
-    upload.on('uploadProgress', (file, percentage) => {});
+    upload.on('uploadProgress', (file, percentage) => {
+      $('#' + file.id).find('.uploadIfy-progress-bar').width(percentage * 100 + '%');
+    });
     // 当文件上传出错时触发
-    upload.on('uploadError', (file, response) => {});
+    upload.on('uploadError', (file, response) => {
+      console.log(file);
+      $('#' + file.id).find('.data').text('失败');
+    });
     // 上传错误
     upload.on('error', (error) => {
+      console.log(error);
       if (error === 'F_EXCEED_SIZE') {
         layer.alert('文件超出指定大小', {icon: 2});
       }
