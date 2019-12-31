@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import _ from 'lodash';
 
 @Component({
   selector: 'app-web-uploader',
@@ -6,10 +7,10 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./web-uploader.component.less']
 })
 export class WebUploaderComponent implements OnInit {
-
-  @Input() fileList = '';
-
-  opts = {
+  @Input() options = {};
+  id = '';
+  uid = '';
+  conf = {
     swf: './assets/webuploader/Uploader.swf',
     server: 'http://www.api.me/index/index/upload',
     fileList: '', // 上传显示的列表 image,file显示图片或文件
@@ -45,13 +46,23 @@ export class WebUploaderComponent implements OnInit {
 
   ngOnInit() {
     const self = this;
-    self.opts.fileList = self.fileList;
-    const upload = new WebUploader.create(this.opts);
+    const opts = $.extend({}, self.conf, self.options);
+    self.id = opts.pick.id;
+    self.uid = self.id + '-list';
+    _.delay(() => {
+      self.createUpload(opts);
+    }, 100);
+  }
+
+  createUpload(opts) {
+    const self = this;
+    const upload = new WebUploader.create(opts);
+    console.log(opts);
     // 当文件被加入队列之前触发
     upload.on('fileQueued', (file) => {
       let $list;
       // 图片列表
-      if (self.opts.fileList === 'image') {
+      if (opts.fileList === 'image') {
         $list = $('<div id="' + file.id + '" class="image-item fid="">' +
           '<img><div class="image-panel">' +
           '<span class="data"></span>' +
@@ -76,7 +87,7 @@ export class WebUploaderComponent implements OnInit {
         }, thumbnailWidth, thumbnailHeight);
       }
       // 文件列表
-      if (self.opts.fileList === 'file') {
+      if (opts.fileList === 'file') {
         $list = $('<div class="uploadIfy-queue-item" id="' + file.id + '" fid="">' +
           '<div class="cancel"><a href="javascript:void(0);">X</a></div>' +
           '<span class="fileName">' + file.name + ' (' + self.bytesToSize(file.size) + ')</span>' +
@@ -84,10 +95,9 @@ export class WebUploaderComponent implements OnInit {
           '<div class="uploadIfy-progress-bar"></div>' +
           '</div></div>');
       }
-      if (self.opts.fileList) {
+      if (opts.fileList) {
         // $list为容器jQuery实例
-        $('.uploadList').append($list);
-
+        $('#' + self.uid).find('.uploadList').append($list);
         // 删除文件
         $list.on('click', '.cancel', () => {
           const fid = $list.attr('fid');
@@ -100,9 +110,15 @@ export class WebUploaderComponent implements OnInit {
     // 当文件上传成功时触发
     upload.on('uploadSuccess', (file, response) => {
       const $this = $('#' + file.id);
-      $this.find('.image-panel').show(); // 显示图片时
-      $this.find('.data').text('成功');
-      $this.attr('fid', response.data.id);
+      if (response.status === 1) {
+        $this.find('.image-panel').show(); // 显示图片时
+        $this.find('.data').text('成功');
+        $this.attr('fid', response.data.id);
+      } else {
+        $this.find('.image-panel').show(); // 显示图片时
+        $this.find('.data').text('失败');
+        $this.attr('fid', '');
+      }
     });
     // 不管成功或者失败，文件上传完成时触发
     upload.on('uploadComplete', () => {
@@ -119,7 +135,6 @@ export class WebUploaderComponent implements OnInit {
     });
     // 上传错误
     upload.on('error', (error) => {
-      console.log(error);
       if (error === 'F_EXCEED_SIZE') {
         layer.alert('文件超出指定大小', {icon: 2});
       }

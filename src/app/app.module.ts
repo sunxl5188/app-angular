@@ -15,6 +15,7 @@ import { ErrorComponent } from './error/error.component';
 import { MessageComponent } from './message/message.component';
 import { NewsComponent } from './news/news.component';
 import { NewsDetailComponent } from './news-detail/news-detail.component';
+import { FileSizePipe } from './shared/fileSize.pipe';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { NewsDetailComponent } from './news-detail/news-detail.component';
     ErrorComponent,
     MessageComponent,
     NewsComponent,
-    NewsDetailComponent
+    NewsDetailComponent,
+    FileSizePipe
   ],
   imports: [
     BrowserModule,
