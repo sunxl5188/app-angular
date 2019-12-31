@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import {Observable, of, Subject} from 'rxjs';
 import {catchError, debounceTime, distinctUntilChanged, map, switchMap, tap} from 'rxjs/operators';
-import {HttpService} from '../../shared/http.service';
+import {HttpService} from '../../shared/service/http.service';
 import * as _ from 'lodash';
 
 export interface KeyList {

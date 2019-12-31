@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {regexpValidator, AsyncValidate, checkPasswordConfirm} from '../shared/validate.directive';
+import {regexpValidator, AsyncValidate, checkPasswordConfirm} from '../shared/directive/validate.directive';
 
 @Component({
   selector: 'app-message',

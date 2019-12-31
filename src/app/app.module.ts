@@ -5,17 +5,16 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ValidateDirective } from './shared/validate.directive';
 import { CityComponent } from './components/city/city.component';
 import { PaginationComponent } from './components/pagination/pagination.component';
 import { SearchComponent } from './components/search/search.component';
-import { WebUploaderComponent } from './components/web-uploader/web-uploader.component';
 import { HomeComponent } from './home/home.component';
 import { ErrorComponent } from './error/error.component';
 import { MessageComponent } from './message/message.component';
 import { NewsComponent } from './news/news.component';
 import { NewsDetailComponent } from './news-detail/news-detail.component';
-import { FileSizePipe } from './shared/fileSize.pipe';
+import { ValidateDirective } from './shared/directive/validate.directive';
+import { FileSizePipe } from './shared/pipe/fileSize.pipe';
 
 @NgModule({
   declarations: [
@@ -24,7 +23,6 @@ import { FileSizePipe } from './shared/fileSize.pipe';
     CityComponent,
     PaginationComponent,
     SearchComponent,
-    WebUploaderComponent,
     HomeComponent,
     ErrorComponent,
     MessageComponent,

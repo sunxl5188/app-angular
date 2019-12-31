@@ -8,7 +8,7 @@
 * />
 * */
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import {HttpService} from '../../shared/http.service';
+import {HttpService} from '../../shared/service/http.service';
 import * as _ from 'lodash';
 
 export class CityObj {

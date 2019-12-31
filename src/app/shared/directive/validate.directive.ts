@@ -2,7 +2,7 @@ import { Directive, Injectable } from '@angular/core';
 import {FormGroup, AbstractControl, AsyncValidator, ValidatorFn, ValidationErrors} from '@angular/forms';
 import {debounceTime, distinctUntilChanged, map, switchMap, tap, delay, first} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
-import {HttpService} from './http.service';
+import {HttpService} from '../service/http.service';
 
 @Injectable({providedIn: 'root'})
 

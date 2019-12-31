@@ -1,19 +1,12 @@
-import { Component, OnInit, Input } from '@angular/core';
-import _ from 'lodash';
+import {Utils} from './utils';
 
-@Component({
-  selector: 'app-web-uploader',
-  templateUrl: './web-uploader.component.html',
-  styleUrls: ['./web-uploader.component.less']
-})
-export class WebUploaderComponent implements OnInit {
-  @Input() options = {};
-  id = '';
-  uid = '';
-  conf = {
+export class Uploadify {
+  private utils = new Utils();
+  private conf = {
+    list: '', // 显示文件容器
+    type: '', // 上传显示的列表 image,file显示图片或文件
     swf: './assets/webuploader/Uploader.swf',
     server: 'http://www.api.me/index/index/upload',
-    fileList: '', // 上传显示的列表 image,file显示图片或文件
     dnd: undefined, // 指定Drag And Drop拖拽的容器
     disableGlobalDnd: false, // 是否禁掉整个页面的拖拽功能
     paste: undefined, // 粘贴来添加截屏的图片 指定监听paste事件的容器 建议设置为document.body
@@ -41,28 +34,15 @@ export class WebUploaderComponent implements OnInit {
     uploadSuccess: undefined, // 上传成功后触发
     uploadComplete: undefined // 不管成功或者失败，文件上传完成时触发
   };
-
-  constructor() { }
-
-  ngOnInit() {
+  create(opts) {
+    Object.assign(this.conf, opts);
     const self = this;
-    const opts = $.extend({}, self.conf, self.options);
-    self.id = opts.pick.id;
-    self.uid = self.id + '-list';
-    _.delay(() => {
-      self.createUpload(opts);
-    }, 100);
-  }
-
-  createUpload(opts) {
-    const self = this;
-    const upload = new WebUploader.create(opts);
-    console.log(opts);
+    const upload = new WebUploader.create(self.conf);
     // 当文件被加入队列之前触发
     upload.on('fileQueued', (file) => {
       let $list;
       // 图片列表
-      if (opts.fileList === 'image') {
+      if (self.conf.type === 'image') {
         $list = $('<div id="' + file.id + '" class="image-item fid="">' +
           '<img><div class="image-panel">' +
           '<span class="data"></span>' +
@@ -87,17 +67,17 @@ export class WebUploaderComponent implements OnInit {
         }, thumbnailWidth, thumbnailHeight);
       }
       // 文件列表
-      if (opts.fileList === 'file') {
+      if (self.conf.type === 'file') {
         $list = $('<div class="uploadIfy-queue-item" id="' + file.id + '" fid="">' +
           '<div class="cancel"><a href="javascript:void(0);">X</a></div>' +
-          '<span class="fileName">' + file.name + ' (' + self.bytesToSize(file.size) + ')</span>' +
+          '<span class="fileName">' + file.name + ' (' + self.utils.bytesToSize(file.size) + ')</span>' +
           '<span class="data"></span><div class="uploadIfy-progress">' +
           '<div class="uploadIfy-progress-bar"></div>' +
           '</div></div>');
       }
-      if (opts.fileList) {
+      if (self.conf.list && self.conf.type) {
         // $list为容器jQuery实例
-        $('#' + self.uid).find('.uploadList').append($list);
+        $(self.conf.list).append($list);
         // 删除文件
         $list.on('click', '.cancel', () => {
           const fid = $list.attr('fid');
@@ -145,14 +125,5 @@ export class WebUploaderComponent implements OnInit {
         layer.alert('文件超出个数！', {icon: 2});
       }
     });
-  }
-
-  bytesToSize(bytes) {
-    if (bytes === 0) { return '0 B'; }
-    const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    const sz = (bytes / Math.pow(k, i)).toFixed(2);
-    return sz + ' ' + sizes[i];
   }
 }
