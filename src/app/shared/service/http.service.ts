@@ -11,7 +11,7 @@ const headers = new HttpHeaders({
   providedIn: 'root'
 })
 export class HttpService {
-  serverUrl = 'http://www.js.me/demo/';
+  serverUrl = 'http://www.api.me/';
 
   constructor(
       private http: HttpClient

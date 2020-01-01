@@ -8,11 +8,12 @@ import {Uploadify} from '../shared/class/uploadify';
   encapsulation: ViewEncapsulation.None
 })
 export class HomeComponent implements OnInit {
-  upload = new Uploadify();
-  constructor() {
+  constructor(
+    private up: Uploadify
+  ) {
   }
   ngOnInit() {
-    this.upload.create({
+    this.up.create({
       list: '#listA',
       type: 'image',
       pick: {
@@ -20,7 +21,7 @@ export class HomeComponent implements OnInit {
         innerHTML: '图片上传'
       }
     });
-    this.upload.create({
+    this.up.create({
       list: '#listB',
       type: 'file',
       pick: {

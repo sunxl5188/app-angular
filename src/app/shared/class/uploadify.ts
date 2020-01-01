@@ -1,7 +1,16 @@
+import {Injectable} from '@angular/core';
+import {HttpService} from '../service/http.service';
 import {Utils} from './utils';
+
+@Injectable({
+  providedIn: 'root'
+})
 
 export class Uploadify {
   private utils = new Utils();
+  constructor(
+    private http: HttpService
+  ) {}
   create(opts) {
     const conf = {
       list: '', // 显示文件容器
@@ -44,7 +53,7 @@ export class Uploadify {
       // 图片列表
       if (conf.type === 'image') {
         $list = $('<div id="' + file.id + '" class="image-item fid="">' +
-          '<img><div class="image-panel">' +
+          '<img /><div class="image-panel">' +
           '<span class="data"></span>' +
           '<a href="javascript:void(0);" class="cancel">删除</a>' +
           '</div><div class="uploadIfy-progress">' +
@@ -68,7 +77,7 @@ export class Uploadify {
       }
       // 文件列表
       if (conf.type === 'file') {
-        $list = $('<div class="uploadIfy-queue-item" id="' + file.id + '" fid="">' +
+        $list = $('<div class="uploadIfy-queue-item" id="' + file.id + '" data-fid="">' +
           '<div class="cancel"><a href="javascript:void(0);">X</a></div>' +
           '<span class="fileName">' + file.name + ' (' + self.utils.bytesToSize(file.size) + ')</span>' +
           '<span class="data"></span><div class="uploadIfy-progress">' +
@@ -83,6 +92,9 @@ export class Uploadify {
           const fid = $list.attr('fid');
           upload.removeFile(file);
           $list.remove();
+          this.http.del('index/index/deleteFile', fid, (res) => {
+            console.log(res);
+          });
           console.log(fid);
         });
       }
