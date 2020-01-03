@@ -52,7 +52,7 @@ export class Uploadify {
       let $list;
       // 图片列表
       if (conf.type === 'image') {
-        $list = $('<div id="' + file.id + '" class="image-item fid="">' +
+        $list = $('<div id="' + file.id + '" class="image-item data-fid="">' +
           '<img /><div class="image-panel">' +
           '<span class="data"></span>' +
           '<a href="javascript:void(0);" class="cancel">删除</a>' +
@@ -89,13 +89,15 @@ export class Uploadify {
         $(conf.list).append($list);
         // 删除文件
         $list.on('click', '.cancel', () => {
-          const fid = $list.attr('fid');
-          upload.removeFile(file);
-          $list.remove();
-          this.http.del('index/index/deleteFile', fid, (res) => {
-            console.log(res);
+          const fid = $list.attr('data-fid');
+          this.http.get('index/index/deleteFile', {id: fid}, (res) => {
+            if (res.status === 1) {
+              upload.removeFile(file);
+              $list.remove();
+            } else {
+              layer.alert(res.msg, {icon: 2});
+            }
           });
-          console.log(fid);
         });
       }
     });
@@ -105,11 +107,11 @@ export class Uploadify {
       if (response.status === 1) {
         $this.find('.image-panel').show(); // 显示图片时
         $this.find('.data').text('成功');
-        $this.attr('fid', response.data.id);
+        $this.attr('data-fid', response.data.id);
       } else {
         $this.find('.image-panel').show(); // 显示图片时
         $this.find('.data').text('失败');
-        $this.attr('fid', '');
+        $this.attr('data-fid', '');
       }
     });
     // 不管成功或者失败，文件上传完成时触发
