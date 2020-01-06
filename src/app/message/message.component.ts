@@ -12,7 +12,8 @@ export class MessageComponent implements OnInit {
     user: '',
     username: '',
     password: '',
-    passwordConfirm: ''
+    passwordConfirm: '',
+    hobby: ['', '', '', '', '']
   };
 
   myForm: FormGroup;
@@ -36,7 +37,8 @@ export class MessageComponent implements OnInit {
       passwordConfirm: new FormControl(this.formData.passwordConfirm, [
         Validators.required,
         // confirmPassword('password')
-      ])
+      ]),
+      hobby: new FormControl(this.formData.hobby)
     }, {validators: [checkPasswordConfirm]});
   }
 
@@ -54,6 +56,11 @@ export class MessageComponent implements OnInit {
 
   get passwordConfirm() {
     return this.myForm.get('passwordConfirm');
+  }
+
+  get hobby() {
+    console.log(this.myForm.get('hobby').value);
+    return this.myForm.get('hobby');
   }
 
   constructor(private asy: AsyncValidate) {

@@ -80,28 +80,29 @@
                 <option value="5">博士</option>
             </select>
         </div>
+        {{hobby.errors|json}}
         <div class="form-group">
             <label>兴趣爱好</label>
             <div class="clearfix">
                 <div class="custom-control custom-checkbox custom-control-inline">
-                    <input type="checkbox" name="interest[]" value="乒乓球" class="custom-control-input">
-                    <label class="custom-control-label">乒乓球</label>
+                    <input type="checkbox" name="hobby" formControlName="hobby" id="hobby1" value="乒乓球" class="custom-control-input">
+                    <label class="custom-control-label" for="hobby1">乒乓球</label>
                 </div>
                 <div class="custom-control custom-checkbox custom-control-inline">
-                    <input type="checkbox" name="interest[]" value="羽毛球" class="custom-control-input">
-                    <label class="custom-control-label">羽毛球</label>
+                    <input type="checkbox" name="hobby" id="hobby2" value="羽毛球" class="custom-control-input">
+                    <label class="custom-control-label" for="hobby2">羽毛球</label>
                 </div>
                 <div class="custom-control custom-checkbox custom-control-inline">
-                    <input type="checkbox" name="interest[]" value="上网" class="custom-control-input">
-                    <label class="custom-control-label">上网</label>
+                    <input type="checkbox" name="hobby" id="hobby3" value="上网" class="custom-control-input">
+                    <label class="custom-control-label" for="hobby3">上网</label>
                 </div>
                 <div class="custom-control custom-checkbox custom-control-inline">
-                    <input type="checkbox" name="interest[]" value="旅游" class="custom-control-input">
-                    <label class="custom-control-label">旅游</label>
+                    <input type="checkbox" name="hobby" id="hobby4" value="旅游" class="custom-control-input">
+                    <label class="custom-control-label" for="hobby4">旅游</label>
                 </div>
                 <div class="custom-control custom-checkbox custom-control-inline">
-                    <input type="checkbox" name="interest[]" value="购物" class="custom-control-input">
-                    <label class="custom-control-label">购物</label>
+                    <input type="checkbox" name="hobby" id="hobby5" value="购物" class="custom-control-input">
+                    <label class="custom-control-label" for="hobby5">购物</label>
                 </div>
             </div>
         </div>
