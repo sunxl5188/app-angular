@@ -3,6 +3,7 @@ import {FormGroup, AbstractControl, AsyncValidator, ValidatorFn, ValidationError
 import {debounceTime, distinctUntilChanged, map, switchMap, tap, delay, first} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
 import {HttpService} from '../service/http.service';
+import * as _ from 'lodash';
 
 @Injectable({providedIn: 'root'})
 
@@ -19,7 +20,7 @@ export class AsyncValidate implements AsyncValidator {
         delay(500),
         debounceTime(500),
         distinctUntilChanged(),
-        switchMap(() => this.http.getAsync('data.php?action=recheck', {keyword: ctrl.value})),
+        switchMap(() => this.http.getAsync('index/index/recheck', {name: ctrl.value})),
         map(result => (result.data === 1 ? { isCheck: `${ctrl.value}用户名已存在` } : null)),
         tap((data) => {
           console.log(data);
@@ -95,13 +96,18 @@ export const checkPasswordConfirm: ValidatorFn = (control: FormGroup): Validatio
   const password = control.get('password');
   const passwordConfirm = control.get('passwordConfirm');
   const boole = password && passwordConfirm && password.value !== passwordConfirm.value;
-  return {passwordConfirm: boole};
+  return boole ? {passwordConfirm: {errors: '确认密码与登录密码不一至,请重新输入!'}} : null;
 };
 
-// 验证复选框
-export function getExclusiveness(field): ValidatorFn {
+export function verifyLength(len: number): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
-    console.log(control);
-    return;
+    const obj = {idCard: {error: '请输入有效身份证号!'}};
+    console.log(control.value);
+    /*if (control.root.get('hobbies')) {
+      const boole = _.filter(control.root.get('hobbies').value, (i) => i === true).length < len;
+      const obj = {idCard: {error: '请输入有效身份证号!'}};
+      return boole ? obj : null;
+    }*/
+    return !control.value ? obj : null;
   };
 }

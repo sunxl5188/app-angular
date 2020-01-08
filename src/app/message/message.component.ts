@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {regexpValidator, AsyncValidate, checkPasswordConfirm} from '../shared/directive/validate.directive';
+import {FormGroup, FormControl, FormArray, Validators} from '@angular/forms';
+import {regexpValidator, AsyncValidate, checkPasswordConfirm, verifyLength} from '../shared/directive/validate.directive';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-message',
@@ -13,19 +14,19 @@ export class MessageComponent implements OnInit {
     username: '',
     password: '',
     passwordConfirm: '',
-    hobby: ['', '', '', '', '']
+    hobbies: {hobby0: false, hobby1: false, hobby2: false, hobby3: false, hobby4: false}
   };
 
   myForm: FormGroup;
 
   ngOnInit() {
     this.myForm = new FormGroup({
-      user: new FormControl(this.formData.user, {
+      /*user: new FormControl(this.formData.user, {
             validators: Validators.required,
             asyncValidators: [this.asy.validate.bind(this.asy)],
             updateOn: 'blur'
           }
-      ),
+      )*//*,
       username: new FormControl(this.formData.username, [
         Validators.required,
         regexpValidator('account', '用户名')
@@ -37,8 +38,14 @@ export class MessageComponent implements OnInit {
       passwordConfirm: new FormControl(this.formData.passwordConfirm, [
         Validators.required,
         // confirmPassword('password')
-      ]),
-      hobby: new FormControl(this.formData.hobby)
+      ]),*/
+      hobbies: new FormGroup({
+        hobby: new FormControl(false, [verifyLength(1)]),
+        hobby1: new FormControl(false),
+        hobby2: new FormControl(false),
+        hobby3: new FormControl(false),
+        hobby4: new FormControl(false)
+      })
     }, {validators: [checkPasswordConfirm]});
   }
 
@@ -46,7 +53,7 @@ export class MessageComponent implements OnInit {
     return this.myForm.get('user');
   }
 
-  get username() {
+/*  get username() {
     return this.myForm.get('username');
   }
 
@@ -57,12 +64,18 @@ export class MessageComponent implements OnInit {
   get passwordConfirm() {
     return this.myForm.get('passwordConfirm');
   }
-
-  get hobby() {
-    console.log(this.myForm.get('hobby').value);
-    return this.myForm.get('hobby');
+  */
+  get hobbies() {
+    return this.myForm.get('hobbies');
   }
-
+  /*get hobby() {
+    return this.myForm.get('hobbies.hobby');
+  }*/
+  // *****************************************
+  /*verifyLength(value: any) {
+    this.myForm.setErrors({hobby: true});
+    return _.filter(value, (item) => item === true).length;
+  }*/
   constructor(private asy: AsyncValidate) {
   }
 }
