@@ -98,16 +98,12 @@ export const checkPasswordConfirm: ValidatorFn = (control: FormGroup): Validatio
   const boole = password && passwordConfirm && password.value !== passwordConfirm.value;
   return boole ? {passwordConfirm: {errors: '确认密码与登录密码不一至,请重新输入!'}} : null;
 };
-
+// 验证复选框 len 至少选择个数
 export function verifyLength(len: number): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
-    const obj = {idCard: {error: '请输入有效身份证号!'}};
-    console.log(control.value);
-    /*if (control.root.get('hobbies')) {
-      const boole = _.filter(control.root.get('hobbies').value, (i) => i === true).length < len;
-      const obj = {idCard: {error: '请输入有效身份证号!'}};
-      return boole ? obj : null;
-    }*/
-    return !control.value ? obj : null;
+    const obj = {checkbox: {error: `复选至少选择${len}项!`}};
+    const str = JSON.stringify(control.value);
+    const count = (str.split('true')).length - 1;
+    return len > count ? obj : null;
   };
 }

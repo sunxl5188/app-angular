@@ -40,12 +40,12 @@ export class MessageComponent implements OnInit {
         // confirmPassword('password')
       ]),*/
       hobbies: new FormGroup({
-        hobby: new FormControl(false, [verifyLength(1)]),
+        hobby: new FormControl(false),
         hobby1: new FormControl(false),
         hobby2: new FormControl(false),
         hobby3: new FormControl(false),
         hobby4: new FormControl(false)
-      })
+      }, [verifyLength(1)])
     }, {validators: [checkPasswordConfirm]});
   }
 
