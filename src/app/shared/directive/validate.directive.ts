@@ -43,7 +43,7 @@ const regexp = {
   alpha_dash: {rules: /^[0-9A-Z_-]*$/i, messages: '能够包含字母数字字符、破折号和下划线'},
   alpha_num: {rules: /^[0-9A-Z]*$/i, messages: '只能包含字母数字字符'},
   alpha_spaces: {rules: /^[A-Z\s]*$/i, messages: '只能包含字母字符和空格'},
-  mobile: {rules: /^1[3-9]\d{9}$/, messages: '格式不正确'},
+  mobile: {rules: /^1[3-9]\d{9}$/, messages: '手机号码格式不正确'},
   email: {rules: /^\w+@[a-z0-9]+\.[a-z]+$/i, messages: '格式不正确'},
   account: {rules: /^[a-zA-Z][\w_-]{5,19}$/, messages: '只能够包含6-20个字母数字字符、破折号和下划线'},
   password: {rules: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/, messages: '长度6-20、以字母开头,至少包含英文和数字'}
@@ -103,5 +103,13 @@ export function verifyLength(len: number): ValidatorFn {
     const str = JSON.stringify(control.value);
     const count = (str.split('true')).length - 1;
     return len > count ? {errors: `复选至少选择${len}项!`} : null;
+  };
+}
+
+export function dateFormat(): ValidatorFn {
+  return (control: AbstractControl): {[key: string]: any} | null => {
+    const value = control.value;
+    console.log(value);
+    return;
   };
 }

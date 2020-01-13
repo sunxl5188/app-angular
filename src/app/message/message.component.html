@@ -37,11 +37,11 @@
                 <label>性别</label>
                 <div class="clearfix">
                     <div class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" name="sex" class="custom-control-input" id="sex1" value="1" checked>
+                        <input type="radio" name="sex" formControlName="sex" class="custom-control-input" id="sex1" value="1" [checked]="sex.value===1">
                         <label class="custom-control-label" for="sex1">男</label>
                     </div>
                     <div class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" name="sex" class="custom-control-input" id="sex2" value="0">
+                        <input type="radio" name="sex" formControlName="sex" class="custom-control-input" id="sex2" value="0" [checked]="sex.value===0">
                         <label class="custom-control-label" for="sex2">女</label>
                     </div>
                 </div>
@@ -49,17 +49,26 @@
             <div class="form-group">
                 <label>您的头像</label>
                 <div class="custom-file">
-                    <input type="file" name="upload" id="upload" placeholder="请选择图片" class="custom-file-input">
+                    <input type="file" name="avatar" formControlName="avatar" id="upload" placeholder="请选择图片" class="custom-file-input">
                     <label class="custom-file-label">请选择图片</label>
+                    <div *ngIf="(avatar.touched || avatar.dirty) && avatar.errors" class="alert alert-danger">
+                        <div *ngIf="avatar.errors.required">请选择您的头像</div>
+                    </div>
                 </div>
             </div>
             <div class="form-group">
                 <label>您的年龄</label>
-                <input type="number" min="0" name="age" class="form-control" placeholder="请输入您的年龄">
+                <input type="number" min="0" name="age" formControlName="age" class="form-control" placeholder="请输入您的年龄">
+                <div *ngIf="(age.touched || age.dirty) && age.errors" class="alert alert-danger">
+                    <div *ngIf="age.errors.required">您的年龄不能为空</div>
+                    <div *ngIf="age.errors.min">最小年龄不得小于16岁</div>
+                    <div *ngIf="age.errors.max">最大年龄不得大于200岁</div>
+                </div>
             </div>
             <div class="form-group">
                 <label>出生日期</label>
-                <input type="text" name="bornDate" class="form-control" placeholder="请选择出生日期">
+                <input type="text" name="bornDate" formControlName="bornDate" class="form-control bornDateTime" placeholder="请选择出生日期">
+                {{bornDate.errors|json}}
             </div>
             <div class="form-group">
                 <label>身份证号</label>
@@ -84,7 +93,7 @@
                 <label>兴趣爱好</label>
                 <div class="clearfix" formGroupName="hobbies">
                     <div class="custom-control custom-checkbox custom-control-inline">
-                        <input type="checkbox" name="hobby" id="hobby1" formControlName="hobby" value="乒乓球" class="custom-control-input">
+                        <input type="checkbox" name="hobby" id="hobby1" formControlName="hobby0" value="乒乓球" class="custom-control-input">
                         <label class="custom-control-label" for="hobby1">乒乓球</label>
                     </div>
                     <div class="custom-control custom-checkbox custom-control-inline">
