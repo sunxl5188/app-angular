@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {FormGroup, FormControl, FormArray, Validators} from '@angular/forms';
+import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {regexpValidator, AsyncValidate, checkPasswordConfirm, verifyLength} from '../shared/directive/validate.directive';
-import * as _ from 'lodash';
 
 @Component({
   selector: 'app-message',
@@ -21,12 +20,12 @@ export class MessageComponent implements OnInit {
 
   ngOnInit() {
     this.myForm = new FormGroup({
-      /*user: new FormControl(this.formData.user, {
+      user: new FormControl(this.formData.user, {
             validators: Validators.required,
             asyncValidators: [this.asy.validate.bind(this.asy)],
             updateOn: 'blur'
           }
-      )*//*,
+      ),
       username: new FormControl(this.formData.username, [
         Validators.required,
         regexpValidator('account', '用户名')
@@ -36,16 +35,15 @@ export class MessageComponent implements OnInit {
         regexpValidator('password', '登录密码')
       ]),
       passwordConfirm: new FormControl(this.formData.passwordConfirm, [
-        Validators.required,
-        // confirmPassword('password')
-      ]),*/
+        Validators.required
+      ]),
       hobbies: new FormGroup({
         hobby: new FormControl(false),
         hobby1: new FormControl(false),
         hobby2: new FormControl(false),
         hobby3: new FormControl(false),
         hobby4: new FormControl(false)
-      }, [verifyLength(1)])
+      }, [verifyLength(2)])
     }, {validators: [checkPasswordConfirm]});
   }
 
@@ -53,7 +51,7 @@ export class MessageComponent implements OnInit {
     return this.myForm.get('user');
   }
 
-/*  get username() {
+  get username() {
     return this.myForm.get('username');
   }
 
@@ -64,18 +62,10 @@ export class MessageComponent implements OnInit {
   get passwordConfirm() {
     return this.myForm.get('passwordConfirm');
   }
-  */
   get hobbies() {
     return this.myForm.get('hobbies');
   }
-  /*get hobby() {
-    return this.myForm.get('hobbies.hobby');
-  }*/
-  // *****************************************
-  /*verifyLength(value: any) {
-    this.myForm.setErrors({hobby: true});
-    return _.filter(value, (item) => item === true).length;
-  }*/
+
   constructor(private asy: AsyncValidate) {
   }
 }

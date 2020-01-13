@@ -1,8 +1,7 @@
 <div class="message">
-    {{myForm.errors|json}}----{{myForm.valid}}+++++++++++{{hobbies.errors|json}}
     <form action="" method="post" autocomplete="off" [formGroup]="myForm">
         <div>
-            <!--<div class="form-group">
+            <div class="form-group">
                 <label>用户姓名后台验证</label>
                 <input type="text" name="user" class="form-control" formControlName="user" placeholder="请输入用户姓名">
                 <div *ngIf="user.pending" class="alert alert-info">数据验证中...</div>
@@ -30,7 +29,7 @@
             <div class="form-group">
                 <label>确认密码</label>
                 <input type="password" name="passwordConfirm" formControlName="passwordConfirm" class="form-control" placeholder="请输入确认密码" required="required">
-                <div *ngIf="(passwordConfirm.dirty || passwordConfirm.touched) && passwordConfirm.invalid && myForm.errors.passwordConfirm" class="alert alert-danger">
+                <div *ngIf="(passwordConfirm.dirty || passwordConfirm.touched) && myForm.errors && myForm.errors.passwordConfirm" class="alert alert-danger">
                     确认密码与登录密码不一至,请重新输入!
                 </div>
             </div>
@@ -80,7 +79,7 @@
                     <option value="4">硕士</option>
                     <option value="5">博士</option>
                 </select>
-            </div>-->
+            </div>
             <div class="form-group">
                 <label>兴趣爱好</label>
                 <div class="clearfix" formGroupName="hobbies">
@@ -104,9 +103,12 @@
                         <input type="checkbox" name="hobby" id="hobby5" formControlName="hobby4" value="购物" class="custom-control-input">
                         <label class="custom-control-label" for="hobby5">购物</label>
                     </div>
+                    <div *ngIf="(hobbies.touched || hobbies.dirty) && hobbies.errors" class="alert alert-danger">
+                        {{hobbies.errors.errors}}
+                    </div>
                 </div>
             </div>
-            <!--<div class="form-group">
+            <div class="form-group">
                 <label>手机号码</label>
                 <input type="text" name="mobile" class="form-control" placeholder="请输入手机号码">
             </div>
@@ -115,8 +117,8 @@
                 <textarea class="form-control" name="desc"></textarea>
             </div>
             <div class="form-group text-center">
-                <button type="submit" class="btn btn-primary">提交</button>
-            </div>-->
+                <button type="submit" class="btn btn-primary" [disabled]="!myForm.valid">提交</button>
+            </div>
         </div>
     </form>
 </div>

@@ -3,7 +3,6 @@ import {FormGroup, AbstractControl, AsyncValidator, ValidatorFn, ValidationError
 import {debounceTime, distinctUntilChanged, map, switchMap, tap, delay, first} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
 import {HttpService} from '../service/http.service';
-import * as _ from 'lodash';
 
 @Injectable({providedIn: 'root'})
 
@@ -95,15 +94,14 @@ export function idCardValidator(): ValidatorFn {
 export const checkPasswordConfirm: ValidatorFn = (control: FormGroup): ValidationErrors | null => {
   const password = control.get('password');
   const passwordConfirm = control.get('passwordConfirm');
-  const boole = password && passwordConfirm && password.value !== passwordConfirm.value;
-  return boole ? {passwordConfirm: {errors: '确认密码与登录密码不一至,请重新输入!'}} : null;
+  return (password.value !== '' && password.value !== passwordConfirm.value) ?
+    {passwordConfirm: {errors: '确认密码与登录密码不一至,请重新输入!'}} : null;
 };
 // 验证复选框 len 至少选择个数
 export function verifyLength(len: number): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
-    const obj = {checkbox: {error: `复选至少选择${len}项!`}};
     const str = JSON.stringify(control.value);
     const count = (str.split('true')).length - 1;
-    return len > count ? obj : null;
+    return len > count ? {errors: `复选至少选择${len}项!`} : null;
   };
 }
