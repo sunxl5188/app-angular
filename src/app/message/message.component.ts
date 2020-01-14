@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {FormGroup, FormControl, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
 import {regexpValidator, AsyncValidate, checkPasswordConfirm, verifyLength, dateFormat} from '../shared/directive/validate.directive';
 
 @Component({
@@ -8,6 +8,12 @@ import {regexpValidator, AsyncValidate, checkPasswordConfirm, verifyLength, date
   styleUrls: ['./message.component.less']
 })
 export class MessageComponent implements OnInit {
+
+  constructor(
+    private asy: AsyncValidate,
+    private fb: FormBuilder
+  ) {}
+
   formData = {
     user: '',
     username: '',
@@ -17,13 +23,22 @@ export class MessageComponent implements OnInit {
     avatar: '',
     age: '',
     bornDate: '',
-    hobbies: {hobby0: false, hobby1: false, hobby2: false, hobby3: false, hobby4: false}
+    hobbies: {hobby0: false, hobby1: false, hobby2: false, hobby3: false, hobby4: false},
+    hobby: [
+      {name: '足球', value: 'football', isChecked: false},
+      {name: '篮球', value: 'basketball', isChecked: false},
+      {name: '乒乓球', value: 'pingpang', isChecked: false}
+    ],
+    emails: [{email: 'email1'}, {email: 'email2'}, {email: 'email3'}, {email: 'email4'}]
   };
 
   myForm: FormGroup;
 
   ngOnInit() {
-    laydate.render({
+    this.myForm = this.fb.group({
+      hobby: [this.formData.hobby]
+    });
+    /*laydate.render({
       elem: '.bornDateTime',
       type: 'date',
       done: (value) => {
@@ -66,10 +81,15 @@ export class MessageComponent implements OnInit {
         hobby3: new FormControl(false),
         hobby4: new FormControl(false)
       }, [verifyLength(2)])
-    }, {validators: [checkPasswordConfirm]});
+    }, {validators: [checkPasswordConfirm]});*/
   }
-
-  get user() {
+  initDetailInfoModel() {
+    return this.fb.group(['跑步', '登山', '游泳', '手游']);
+  }
+  get hobby() {
+    return this.myForm.get('hobby');
+  }
+  /*get user() {
     return this.myForm.get('user');
   }
 
@@ -100,7 +120,8 @@ export class MessageComponent implements OnInit {
 
   get hobbies() {
     return this.myForm.get('hobbies');
-  }
-  constructor(private asy: AsyncValidate) {
+  }*/
+  submitForm() {
+    console.log(this.myForm.value);
   }
 }

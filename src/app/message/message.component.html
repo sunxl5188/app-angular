@@ -1,7 +1,7 @@
 <div class="message">
     <form action="" method="post" autocomplete="off" [formGroup]="myForm">
-        <div>
-            <div class="form-group">
+        <!--
+        <div class="form-group">
                 <label>用户姓名后台验证</label>
                 <input type="text" name="user" class="form-control" formControlName="user" placeholder="请输入用户姓名">
                 <div *ngIf="user.pending" class="alert alert-info">数据验证中...</div>
@@ -128,6 +128,12 @@
             <div class="form-group text-center">
                 <button type="submit" class="btn btn-primary" [disabled]="!myForm.valid">提交</button>
             </div>
-        </div>
+        -->
+
+        <span *ngFor="let item of formData.hobby">
+            <input type="checkbox" [value]="item.value" [(ngModel)]="item.isChecked" [ngModelOptions]="{standalone:true}" />
+            {{item.name}}
+        </span>
+        <button type="button" class="btn btn-primary" (click)="submitForm()">提交数据</button>
     </form>
 </div>
