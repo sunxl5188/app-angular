@@ -129,11 +129,11 @@
                 <button type="submit" class="btn btn-primary" [disabled]="!myForm.valid">提交</button>
             </div>
         -->
-
         <span *ngFor="let item of formData.hobby">
-            <input type="checkbox" [value]="item.value" [(ngModel)]="item.isChecked" [ngModelOptions]="{standalone:true}" />
+            <input type="checkbox" [value]="item.value" [(ngModel)]="item.isChecked" [ngModelOptions]="{standalone:true}" (click)="addItem(item)" />
             {{item.name}}
         </span>
+        {{hobby.errors|json}}
         <button type="button" class="btn btn-primary" (click)="submitForm()">提交数据</button>
     </form>
 </div>

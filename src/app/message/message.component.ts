@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, FormControl, FormArray, Validators} from '@angular/forms';
 import {regexpValidator, AsyncValidate, checkPasswordConfirm, verifyLength, dateFormat} from '../shared/directive/validate.directive';
 
 @Component({
@@ -33,10 +33,28 @@ export class MessageComponent implements OnInit {
   };
 
   myForm: FormGroup;
+  private createForm() {
 
+    return this.fb.group({
+
+      control1:  ['', Validators.required],
+
+      control2:  ['', Validators.required],
+
+      Name:  ['', Validators.required],
+
+      Code:  ['', Validators.required],
+
+      Level:  ['', Validators.required],
+
+      Remark:  [''],
+
+    });
+
+  }
   ngOnInit() {
     this.myForm = this.fb.group({
-      hobby: [this.formData.hobby]
+      hobby: this.fb.array([], [Validators.required, Validators.minLength(2)])
     });
     /*laydate.render({
       elem: '.bornDateTime',
@@ -83,11 +101,18 @@ export class MessageComponent implements OnInit {
       }, [verifyLength(2)])
     }, {validators: [checkPasswordConfirm]});*/
   }
-  initDetailInfoModel() {
-    return this.fb.group(['跑步', '登山', '游泳', '手游']);
-  }
+
   get hobby() {
     return this.myForm.get('hobby');
+  }
+  get username() {
+    return this.myForm.get('username');
+  }
+  // https://www.iteye.com/blog/minjiechenjava-2414890
+  // https://www.jianshu.com/p/abd760695da3
+  addItem(item) {
+    const arr = this.myForm.get('hobby') as FormArray;
+    arr.push(this.fb.group(item));
   }
   /*get user() {
     return this.myForm.get('user');
