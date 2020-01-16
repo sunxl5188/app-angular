@@ -17,23 +17,23 @@ export class MessageComponent implements OnInit {
   loading = true;
   // 定义爱好
   hobbyOption = [
-    {name: '滑雪', value: '滑雪'},
-    {name: '看电影', value: '看电影'},
-    {name: '看报纸', value: '看报纸'},
-    {name: '上网聊天', value: '上网聊天'},
-    {name: '看小说', value: '看小说'},
-    {name: '足球', value: '足球'},
-    {name: '乒乓球', value: '乒乓球'},
-    {name: '旅游', value: '旅游'},
-    {name: '逛街', value: '逛街'},
-    {name: '听音乐', value: '听音乐'},
-    {name: '写剧本', value: '写剧本'},
-    {name: '游泳', value: '游泳'},
-    {name: '足球', value: '足球'},
-    {name: '玩游戏', value: '玩游戏'},
-    {name: '看电视剧', value: '看电视剧'},
-    {name: '羽毛球', value: '羽毛球'},
-    {name: '篮球', value: '篮球'}
+    {name: '滑雪', value: '1'},
+    {name: '看电影', value: '2'},
+    {name: '看报纸', value: '3'},
+    {name: '上网聊天', value: '4'},
+    {name: '看小说', value: '5'},
+    {name: '足球', value: '6'},
+    {name: '乒乓球', value: '7'},
+    {name: '旅游', value: '8'},
+    {name: '逛街', value: '9'},
+    {name: '听音乐', value: '10'},
+    {name: '写剧本', value: '11'},
+    {name: '游泳', value: '12'},
+    {name: '足球', value: '13'},
+    {name: '玩游戏', value: '14'},
+    {name: '看电视剧', value: '15'},
+    {name: '羽毛球', value: '16'},
+    {name: '篮球', value: '17'}
     ];
   // 表单默认值
   formData = {
@@ -56,24 +56,26 @@ export class MessageComponent implements OnInit {
   myForm: FormGroup;
 
   ngOnInit() {
-    const hobbyAction = ['逛街', '看电视剧'];
+    const hobbyAction = ['5', '8'];
     this.hobbyOption.map(item => {
       if (hobbyAction.indexOf(item.value) >= 0) {
         this.formData.hobby.push(item);
       }
     });
-    // 日期插件
-    laydate.render({
-      elem: '.bornDateTime',
-      type: 'date',
-      done: (value) => {
-        this.myForm.patchValue({bornDate: value});
-        // this.myForm.get('bornDate').setValue(value);
-      }
-    });
     setTimeout(() => {
       this.loading = false;
       this.createForm();
+      _.delay(() => {
+        // 日期插件
+        laydate.render({
+          elem: '.bornDateTime',
+          type: 'date',
+          done: (value) => {
+            this.myForm.patchValue({bornDate: value});
+            // this.myForm.get('bornDate').setValue(value);
+          }
+        });
+      }, 500);
     }, 1000);
   }
   // 创建表单

@@ -13,5 +13,4 @@ export class FileSizePipe implements PipeTransform {
     const sz = (bytes / Math.pow(k, i)).toFixed(2);
     return sz + ' ' + sizes[i];
   }
-
 }

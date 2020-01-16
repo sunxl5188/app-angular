@@ -4,9 +4,6 @@
     </div>
     <div *ngIf="!loading">
         <form action="" method="post" autocomplete="off" [formGroup]="myForm">
-            {{myForm.errors|json}}
-            <hr>
-            {{hobby.value|json}}
             <div class="form-group">
                 <label>用户姓名后台验证</label>
                 <input type="text" name="user" class="form-control" formControlName="user" placeholder="请输入用户姓名">
@@ -120,8 +117,9 @@
                 <div>
                     <div class="custom-control custom-checkbox custom-control-inline"
                          *ngFor="let item of hobbyOption;index as i">
+                        <!--todo 初始分值选中-->
                         <input type="checkbox" name="hobby" id="hobby{{i}}" class="custom-control-input" [value]="item.value"
-                               [checked]="hobby.value.indexOf(item.value) >= 0" (click)="addItem($event, item, 'hobby')">
+                               [checked]="hobby.value" (click)="addItem($event, item, 'hobby')">
                         <label class="custom-control-label" for="hobby{{i}}">{{item.name}}</label>
                     </div>
                 </div>
