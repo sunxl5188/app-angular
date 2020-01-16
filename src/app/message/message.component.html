@@ -1,7 +1,13 @@
 <div class="message">
-    <form action="" method="post" autocomplete="off" [formGroup]="myForm">
-        <!--
-        <div class="form-group">
+    <div *ngIf="loading">
+        <div class="loading"></div>
+    </div>
+    <div *ngIf="!loading">
+        <form action="" method="post" autocomplete="off" [formGroup]="myForm">
+            {{myForm.errors|json}}
+            <hr>
+            {{hobby.value|json}}
+            <div class="form-group">
                 <label>用户姓名后台验证</label>
                 <input type="text" name="user" class="form-control" formControlName="user" placeholder="请输入用户姓名">
                 <div *ngIf="user.pending" class="alert alert-info">数据验证中...</div>
@@ -20,7 +26,8 @@
             </div>
             <div class="form-group">
                 <label>登录密码</label>
-                <input type="password" name="password" class="form-control" formControlName="password" placeholder="请输入登录密码" required="required">
+                <input type="password" name="password" class="form-control" formControlName="password" placeholder="请输入登录密码"
+                       required="required">
                 <div *ngIf="(password.dirty || password.touched) && password.invalid" class="alert alert-danger">
                     <div *ngIf="password.errors.required">登录密码不能为空!</div>
                     <div *ngIf="!password.errors.required && password.errors.regexp">{{password.errors.regexp.error}}</div>
@@ -28,8 +35,10 @@
             </div>
             <div class="form-group">
                 <label>确认密码</label>
-                <input type="password" name="passwordConfirm" formControlName="passwordConfirm" class="form-control" placeholder="请输入确认密码" required="required">
-                <div *ngIf="(passwordConfirm.dirty || passwordConfirm.touched) && myForm.errors && myForm.errors.passwordConfirm" class="alert alert-danger">
+                <input type="password" name="passwordConfirm" formControlName="passwordConfirm" class="form-control"
+                       placeholder="请输入确认密码" required="required">
+                <div *ngIf="(passwordConfirm.dirty || passwordConfirm.touched) && myForm.errors && myForm.errors.passwordConfirm"
+                     class="alert alert-danger">
                     确认密码与登录密码不一至,请重新输入!
                 </div>
             </div>
@@ -37,11 +46,13 @@
                 <label>性别</label>
                 <div class="clearfix">
                     <div class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" name="sex" formControlName="sex" class="custom-control-input" id="sex1" value="1" [checked]="sex.value===1">
+                        <input type="radio" name="sex" formControlName="sex" class="custom-control-input" id="sex1"
+                               [value]="1" [checked]="sex.value===1">
                         <label class="custom-control-label" for="sex1">男</label>
                     </div>
                     <div class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" name="sex" formControlName="sex" class="custom-control-input" id="sex2" value="0" [checked]="sex.value===0">
+                        <input type="radio" name="sex" formControlName="sex" class="custom-control-input" id="sex2"
+                               [value]="0" [checked]="sex.value===0">
                         <label class="custom-control-label" for="sex2">女</label>
                     </div>
                 </div>
@@ -49,7 +60,8 @@
             <div class="form-group">
                 <label>您的头像</label>
                 <div class="custom-file">
-                    <input type="file" name="avatar" formControlName="avatar" id="upload" placeholder="请选择图片" class="custom-file-input">
+                    <input type="file" name="avatar" formControlName="avatar" id="upload" placeholder="请选择图片"
+                           class="custom-file-input">
                     <label class="custom-file-label">请选择图片</label>
                     <div *ngIf="(avatar.touched || avatar.dirty) && avatar.errors" class="alert alert-danger">
                         <div *ngIf="avatar.errors.required">请选择您的头像</div>
@@ -67,20 +79,31 @@
             </div>
             <div class="form-group">
                 <label>出生日期</label>
-                <input type="text" name="bornDate" formControlName="bornDate" class="form-control bornDateTime" placeholder="请选择出生日期">
-                {{bornDate.errors|json}}
+                <input type="text" name="bornDate" formControlName="bornDate" class="form-control bornDateTime"
+                       placeholder="请选择出生日期">
+                <div *ngIf="(bornDate.touched || bornDate.dirty) && bornDate.errors" class="alert alert-danger" role="alert">
+                    请选择出生日期
+                </div>
             </div>
             <div class="form-group">
                 <label>身份证号</label>
-                <input type="text" name="idCard" class="form-control" placeholder="请输入您的身份证号">
+                <input type="text" name="idCard" formControlName="idCard" class="form-control" placeholder="请输入您的身份证号">
+                <div *ngIf="(idCard.touched || idCard.dirty) && idCard.errors" class="alert alert-danger" role="alert">
+                    <div *ngIf="idCard.errors.required">请输入身份证号</div>
+                    <div *ngIf="!idCard.errors.required && idCard.errors.idCard">{{idCard.errors.idCard.error}}</div>
+                </div>
             </div>
             <div class="form-group">
                 <label>邮箱</label>
-                <input type="email" name="email" class="form-control" placeholder="请输入电子邮箱">
+                <input type="email" name="email" formControlName="email" class="form-control" placeholder="请输入电子邮箱">
+                <div *ngIf="(email.touched || email.dirty) && email.errors" class="alert alert-danger" role="alert">
+                    <div *ngIf="email.errors.required">请输入邮箱地址</div>
+                    <div *ngIf="!email.errors.required && email.errors.regexp">{{email.errors.regexp.error}}</div>
+                </div>
             </div>
             <div class="form-group">
-                <label>你的学历</label>
-                <select class="form-control" name="education">
+                <label>您的学历</label>
+                <select class="form-control" name="education" formControlName="education">
                     <option value="">请选择</option>
                     <option value="1">专科</option>
                     <option value="2">本科</option>
@@ -88,52 +111,42 @@
                     <option value="4">硕士</option>
                     <option value="5">博士</option>
                 </select>
+                <div *ngIf="(education.touched || education.dirty) && education.errors" class="alert alert-danger" role="alert">
+                    请选择您的学历
+                </div>
             </div>
             <div class="form-group">
                 <label>兴趣爱好</label>
-                <div class="clearfix" formGroupName="hobbies">
-                    <div class="custom-control custom-checkbox custom-control-inline">
-                        <input type="checkbox" name="hobby" id="hobby1" formControlName="hobby0" value="乒乓球" class="custom-control-input">
-                        <label class="custom-control-label" for="hobby1">乒乓球</label>
+                <div>
+                    <div class="custom-control custom-checkbox custom-control-inline"
+                         *ngFor="let item of hobbyOption;index as i">
+                        <input type="checkbox" name="hobby" id="hobby{{i}}" class="custom-control-input" [value]="item.value"
+                               [checked]="hobby.value.indexOf(item.value) >= 0" (click)="addItem($event, item, 'hobby')">
+                        <label class="custom-control-label" for="hobby{{i}}">{{item.name}}</label>
                     </div>
-                    <div class="custom-control custom-checkbox custom-control-inline">
-                        <input type="checkbox" name="hobby" id="hobby2" formControlName="hobby1" value="羽毛球" class="custom-control-input">
-                        <label class="custom-control-label" for="hobby2">羽毛球</label>
-                    </div>
-                    <div class="custom-control custom-checkbox custom-control-inline">
-                        <input type="checkbox" name="hobby" id="hobby3" formControlName="hobby2" value="上网" class="custom-control-input">
-                        <label class="custom-control-label" for="hobby3">上网</label>
-                    </div>
-                    <div class="custom-control custom-checkbox custom-control-inline">
-                        <input type="checkbox" name="hobby" id="hobby4" formControlName="hobby3" value="旅游" class="custom-control-input">
-                        <label class="custom-control-label" for="hobby4">旅游</label>
-                    </div>
-                    <div class="custom-control custom-checkbox custom-control-inline">
-                        <input type="checkbox" name="hobby" id="hobby5" formControlName="hobby4" value="购物" class="custom-control-input">
-                        <label class="custom-control-label" for="hobby5">购物</label>
-                    </div>
-                    <div *ngIf="(hobbies.touched || hobbies.dirty) && hobbies.errors" class="alert alert-danger">
-                        {{hobbies.errors.errors}}
-                    </div>
+                </div>
+                <div *ngIf="(hobby.touched || hobby.dirty) && hobby.errors" class="alert alert-danger">
+                    {{hobby.errors.errors}}
                 </div>
             </div>
             <div class="form-group">
                 <label>手机号码</label>
-                <input type="text" name="mobile" class="form-control" placeholder="请输入手机号码">
+                <input type="text" name="mobile" formControlName="phone" class="form-control" placeholder="请输入手机号码">
+                <div *ngIf="(phone.touched || phone.dirty) && phone.errors" class="alert alert-danger" role="alert">
+                    <div *ngIf="phone.errors.required">请输入手机号</div>
+                    <div *ngIf="!phone.errors.required && phone.errors.regexp">{{phone.errors.regexp.error}}</div>
+                </div>
             </div>
             <div class="form-group">
                 <label>您的描述</label>
-                <textarea class="form-control" name="desc"></textarea>
+                <textarea class="form-control" name="desc" formControlName="desc"></textarea>
+                <div *ngIf="(desc.touched || desc.dirty) && desc.errors" class="alert alert-danger" role="alert">
+                    <div *ngIf="desc.errors.required">描述不能为空</div>
+                </div>
             </div>
             <div class="form-group text-center">
-                <button type="submit" class="btn btn-primary" [disabled]="!myForm.valid">提交</button>
+                <button type="submit" class="btn btn-primary" [disabled]="!myForm.valid" (click)="submitForm()">提交</button>
             </div>
-        -->
-        <span *ngFor="let item of formData.hobby">
-            <input type="checkbox" [value]="item.value" [(ngModel)]="item.isChecked" [ngModelOptions]="{standalone:true}" (click)="addItem(item)" />
-            {{item.name}}
-        </span>
-        {{hobby.errors|json}}
-        <button type="button" class="btn btn-primary" (click)="submitForm()">提交数据</button>
-    </form>
+        </form>
+    </div>
 </div>

@@ -44,7 +44,7 @@ const regexp = {
   alpha_num: {rules: /^[0-9A-Z]*$/i, messages: '只能包含字母数字字符'},
   alpha_spaces: {rules: /^[A-Z\s]*$/i, messages: '只能包含字母字符和空格'},
   mobile: {rules: /^1[3-9]\d{9}$/, messages: '手机号码格式不正确'},
-  email: {rules: /^\w+@[a-z0-9]+\.[a-z]+$/i, messages: '格式不正确'},
+  email: {rules: /^\w+@[a-z0-9]+\.[a-z][a-z]+$/i, messages: '邮箱格式不正确'},
   account: {rules: /^[a-zA-Z][\w_-]{5,19}$/, messages: '只能够包含6-20个字母数字字符、破折号和下划线'},
   password: {rules: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/, messages: '长度6-20、以字母开头,至少包含英文和数字'}
 };
@@ -55,10 +55,10 @@ const regexp = {
  * @param: n 是输入框名称
  * @param: tipsy 自定义提示信息
  */
-export function regexpValidator(name, n = '', tipsy = ''): ValidatorFn {
+export function regexpValidator(name, msg = ''): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
     const result = regexp[name].rules.test(control.value);
-    return result ? null : {regexp: {error: tipsy || n + regexp[name].messages}};
+    return result ? null : {regexp: {error: msg || regexp[name].messages}};
   };
 }
 
@@ -82,11 +82,11 @@ export function idCardValidator(): ValidatorFn {
       for (let i = 0; i < 17; i++) {
         sum += control.value[i] * factor[i];
       }
-      if (parity[sum % 11] === code.toUpperCase()) {
+      if (parity[sum % 11] === parseInt(code.toUpperCase(), 0)) {
         boole = true;
       }
     }
-    return boole ? null : {idCard: {error: '请输入有效身份证号!'}};
+    return !boole ? {idCard: {error: '请输入有效身份证号!'}} : null;
   };
 }
 
@@ -94,15 +94,18 @@ export function idCardValidator(): ValidatorFn {
 export const checkPasswordConfirm: ValidatorFn = (control: FormGroup): ValidationErrors | null => {
   const password = control.get('password');
   const passwordConfirm = control.get('passwordConfirm');
-  return (password.value !== '' && password.value !== passwordConfirm.value) ?
-    {passwordConfirm: {errors: '确认密码与登录密码不一至,请重新输入!'}} : null;
+  let boole = true;
+  if (password.value !== '' && password.value === passwordConfirm.value) {
+    boole = false;
+  }
+  return boole ? {passwordConfirm: {error: '确认密码与登录密码不一至,请重新输入!'}} : null;
 };
-// 验证复选框 len 至少选择个数
+// 验证复选框 len 至少选择个数 暂时用不到了
 export function verifyLength(len: number): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
     const str = JSON.stringify(control.value);
     const count = (str.split('true')).length - 1;
-    return len > count ? {errors: `复选至少选择${len}项!`} : null;
+    return len > count ? {error: `复选至少选择${len}项!`} : null;
   };
 }
 

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, FormControl, FormArray, Validators} from '@angular/forms';
-import {regexpValidator, AsyncValidate, checkPasswordConfirm, verifyLength, dateFormat} from '../shared/directive/validate.directive';
+import {FormBuilder, FormGroup, FormArray, Validators} from '@angular/forms';
+import {regexpValidator, AsyncValidate, checkPasswordConfirm, idCardValidator} from '../shared/directive/validate.directive';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-message',
@@ -13,7 +14,28 @@ export class MessageComponent implements OnInit {
     private asy: AsyncValidate,
     private fb: FormBuilder
   ) {}
-
+  loading = true;
+  // 定义爱好
+  hobbyOption = [
+    {name: '滑雪', value: '滑雪'},
+    {name: '看电影', value: '看电影'},
+    {name: '看报纸', value: '看报纸'},
+    {name: '上网聊天', value: '上网聊天'},
+    {name: '看小说', value: '看小说'},
+    {name: '足球', value: '足球'},
+    {name: '乒乓球', value: '乒乓球'},
+    {name: '旅游', value: '旅游'},
+    {name: '逛街', value: '逛街'},
+    {name: '听音乐', value: '听音乐'},
+    {name: '写剧本', value: '写剧本'},
+    {name: '游泳', value: '游泳'},
+    {name: '足球', value: '足球'},
+    {name: '玩游戏', value: '玩游戏'},
+    {name: '看电视剧', value: '看电视剧'},
+    {name: '羽毛球', value: '羽毛球'},
+    {name: '篮球', value: '篮球'}
+    ];
+  // 表单默认值
   formData = {
     user: '',
     username: '',
@@ -23,113 +45,72 @@ export class MessageComponent implements OnInit {
     avatar: '',
     age: '',
     bornDate: '',
-    hobbies: {hobby0: false, hobby1: false, hobby2: false, hobby3: false, hobby4: false},
-    hobby: [
-      {name: '足球', value: 'football', isChecked: false},
-      {name: '篮球', value: 'basketball', isChecked: false},
-      {name: '乒乓球', value: 'pingpang', isChecked: false}
-    ],
-    emails: [{email: 'email1'}, {email: 'email2'}, {email: 'email3'}, {email: 'email4'}]
+    idCard: '',
+    email: '',
+    education: '',
+    phone: '',
+    hobby: [],
+    desc: ''
   };
 
   myForm: FormGroup;
-  private createForm() {
 
-    return this.fb.group({
-
-      control1:  ['', Validators.required],
-
-      control2:  ['', Validators.required],
-
-      Name:  ['', Validators.required],
-
-      Code:  ['', Validators.required],
-
-      Level:  ['', Validators.required],
-
-      Remark:  [''],
-
-    });
-
-  }
   ngOnInit() {
-    this.myForm = this.fb.group({
-      hobby: this.fb.array([], [Validators.required, Validators.minLength(2)])
+    const hobbyAction = ['逛街', '看电视剧'];
+    this.hobbyOption.map(item => {
+      if (hobbyAction.indexOf(item.value) >= 0) {
+        this.formData.hobby.push(item);
+      }
     });
-    /*laydate.render({
+    // 日期插件
+    laydate.render({
       elem: '.bornDateTime',
       type: 'date',
       done: (value) => {
-        this.myForm.value.bornDate = value;
+        this.myForm.patchValue({bornDate: value});
+        // this.myForm.get('bornDate').setValue(value);
       }
     });
-    this.myForm = new FormGroup({
-      user: new FormControl(this.formData.user, {
-            validators: Validators.required,
-            asyncValidators: [this.asy.validate.bind(this.asy)],
-            updateOn: 'blur'
-          }
-      ),
-      username: new FormControl(this.formData.username, [
-        Validators.required,
-        regexpValidator('account', '用户名')
-      ]),
-      password: new FormControl(this.formData.password, [
-        Validators.required,
-        regexpValidator('password', '登录密码')
-      ]),
-      passwordConfirm: new FormControl(this.formData.passwordConfirm, [
-        Validators.required
-      ]),
-      sex: new FormControl(this.formData.sex, [Validators.required]),
-      avatar: new FormControl(this.formData.avatar, [Validators.required]),
-      age: new FormControl(this.formData.age, [
-        Validators.required,
-        Validators.min(16),
-        Validators.max(200)
-      ]),
-      bornDate: new FormControl(this.formData.bornDate, {
+    setTimeout(() => {
+      this.loading = false;
+      this.createForm();
+    }, 1000);
+  }
+  // 创建表单
+  createForm() {
+    this.myForm = this.fb.group({
+      user: [this.formData.user, {
         validators: Validators.required,
-        asyncValidators: [this.asy.validate.bind(this.asy)]
-      }),
-      hobbies: new FormGroup({
-        hobby0: new FormControl(false),
-        hobby1: new FormControl(false),
-        hobby2: new FormControl(false),
-        hobby3: new FormControl(false),
-        hobby4: new FormControl(false)
-      }, [verifyLength(2)])
-    }, {validators: [checkPasswordConfirm]});*/
+        asyncValidators: [this.asy.validate.bind(this.asy)],
+        updateOn: 'blur'
+      }],
+      username: [this.formData.username, [Validators.required, regexpValidator('account', '用户名')]],
+      password: [this.formData.password, [Validators.required, regexpValidator('password', '登录密码')]],
+      passwordConfirm: [this.formData.passwordConfirm, Validators.required],
+      sex: [this.formData.sex, Validators.required],
+      avatar: [this.formData.avatar, Validators.required], // 头像
+      age: [this.formData.age, [Validators.required, Validators.min(16), Validators.max(200)]],
+      bornDate: [this.formData.bornDate, Validators.required],
+      idCard: [this.formData.idCard, [Validators.required, idCardValidator()]],
+      email: [this.formData.email, [Validators.required, regexpValidator('email', '请输入有效邮箱地址')]],
+      education: [this.formData.education, Validators.required],
+      phone: [this.formData.phone, [Validators.required, regexpValidator('mobile')]],
+      hobby: this.fb.array(this.formData.hobby, [Validators.required, Validators.minLength(2)]),
+      desc: [this.formData.desc, Validators.required]
+    }, {validators: [checkPasswordConfirm]});
   }
-
-  get hobby() {
-    return this.myForm.get('hobby');
-  }
-  get username() {
-    return this.myForm.get('username');
-  }
-  // https://www.iteye.com/blog/minjiechenjava-2414890
-  // https://www.jianshu.com/p/abd760695da3
-  addItem(item) {
-    const arr = this.myForm.get('hobby') as FormArray;
-    arr.push(this.fb.group(item));
-  }
-  /*get user() {
+  get user() {
     return this.myForm.get('user');
   }
-
   get username() {
     return this.myForm.get('username');
   }
-
   get password() {
     return this.myForm.get('password');
   }
-
   get passwordConfirm() {
     return this.myForm.get('passwordConfirm');
   }
-
   get sex() {
     return this.myForm.get('sex');
   }
@@ -142,10 +123,40 @@ export class MessageComponent implements OnInit {
   get bornDate() {
     return this.myForm.get('bornDate');
   }
-
-  get hobbies() {
-    return this.myForm.get('hobbies');
-  }*/
+  get idCard() {
+    return this.myForm.get('idCard');
+  }
+  get email() {
+    return this.myForm.get('email');
+  }
+  get education() {
+    return this.myForm.get('education');
+  }
+  get phone() {
+    return this.myForm.get('phone');
+  }
+  get hobby() {
+    return this.myForm.get('hobby');
+  }
+  get desc() {
+    return this.myForm.get('desc');
+  }
+  // https://www.iteye.com/blog/minjiechenjava-2414890
+  // https://www.jianshu.com/p/abd760695da3
+  // 添加删除复选框
+  addItem(event, obj, field) {
+    const arr = this.myForm.get(field) as FormArray;
+    if (event.target.checked) {
+      arr.push(this.fb.group(obj));
+    } else {
+      const valArr = this.myForm.value[field];
+      valArr.map((item, i) => {
+        if (item.value === obj.value) {
+          arr.removeAt(i);
+        }
+      });
+    }
+  }
   submitForm() {
     console.log(this.myForm.value);
   }
