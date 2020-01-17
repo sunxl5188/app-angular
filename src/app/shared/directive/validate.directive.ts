@@ -22,7 +22,7 @@ export class AsyncValidate implements AsyncValidator {
         switchMap(() => this.http.getAsync('index/index/recheck', {name: ctrl.value})),
         map(result => (result.data === 1 ? { isCheck: `${ctrl.value}用户名已存在` } : null)),
         tap((data) => {
-          console.log(data);
+          // console.log(data);
         }),
         first()
     );

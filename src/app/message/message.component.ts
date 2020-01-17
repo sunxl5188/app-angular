@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, FormArray, Validators} from '@angular/forms';
 import {regexpValidator, AsyncValidate, checkPasswordConfirm, idCardValidator} from '../shared/directive/validate.directive';
+import {HttpService} from '../shared/service/http.service';
 import * as _ from 'lodash';
 
 @Component({
@@ -12,7 +13,8 @@ export class MessageComponent implements OnInit {
 
   constructor(
     private asy: AsyncValidate,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private http: HttpService
   ) {}
   loading = true;
   // 定义爱好
@@ -56,7 +58,7 @@ export class MessageComponent implements OnInit {
   myForm: FormGroup;
 
   ngOnInit() {
-    const hobbyAction = ['5', '8'];
+    const hobbyAction = ['1', '2'];
     this.hobbyOption.map(item => {
       if (hobbyAction.indexOf(item.value) >= 0) {
         this.formData.hobby.push(item);
@@ -159,7 +161,20 @@ export class MessageComponent implements OnInit {
       });
     }
   }
-  submitForm() {
-    console.log(this.myForm.value);
+  // 查找数组内对象内是否包含指定对象
+  isContain(val) {
+    return this.hobby.value.some(item => item.value === val);
   }
+  submitForm() {
+    const form = this.myForm.value;
+    const hobbyArr = [];
+    for (const item of this.hobby.value) {
+      hobbyArr.push(item.value);
+    }
+    form.hobby = JSON.stringify(hobbyArr);
+    this.http.post('index/index/message', form, (item) => {
+      console.log(item);
+    });
+  }
+
 }
