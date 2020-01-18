@@ -165,6 +165,16 @@ export class MessageComponent implements OnInit {
   isContain(val) {
     return this.hobby.value.some(item => item.value === val);
   }
+  // 设置图片blob
+  avatarValue(event) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const obj: any = (e.target as any).result;
+      this.myForm.patchValue({avatar: obj});
+    };
+    reader.readAsDataURL(event.target.files[0]);
+  }
+
   submitForm() {
     const form = this.myForm.value;
     const hobbyArr = [];

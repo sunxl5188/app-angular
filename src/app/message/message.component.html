@@ -57,7 +57,7 @@
             <div class="form-group">
                 <label>您的头像</label>
                 <div class="custom-file">
-                    <input type="file" name="avatar" formControlName="avatar" id="upload" placeholder="请选择图片"
+                    <input type="file" name="avatar" (change)="avatarValue($event)" id="upload" placeholder="请选择图片"
                            class="custom-file-input">
                     <label class="custom-file-label">请选择图片</label>
                     <div *ngIf="(avatar.touched || avatar.dirty) && avatar.errors" class="alert alert-danger">
@@ -143,7 +143,7 @@
                 </div>
             </div>
             <div class="form-group text-center">
-                <button type="submit" class="btn btn-primary"  (click)="submitForm()">提交</button>
+                <button type="submit" class="btn btn-primary" [disabled]="!myForm.valid" (click)="submitForm()">提交</button>
             </div>
         </form>
     </div>
